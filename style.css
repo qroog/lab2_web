@@ -240,3 +240,29 @@ body {
   border-color: var(--orange);
   box-shadow: 0 0 0 2px rgba(255, 60, 0, 0.2);
 }
+
+.task-item {
+  background: var(--dark-bg);
+  border: 2px solid var(--gray-light);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: var(--transition);
+  cursor: grab; /* ДОБАВЛЕНО */
+}
+
+.task-item.dragging {
+  opacity: 0.5;
+  background: var(--gray-light);
+}
+
+.btn-edit {
+  background: var(--orange);
+}
+
+.btn-edit:hover {
+  background: var(--orange-dark);
+}

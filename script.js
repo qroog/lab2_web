@@ -3,6 +3,7 @@ class TodoApp {
         this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]');
         this.currentFilter = 'all';
 		this.currentSort = 'date-asc'
+		this.draggedItem = null;
         this.init();
     }
 
@@ -58,29 +59,66 @@ class TodoApp {
         );
 		
 		this.els.sortBtn.addEventListener('click', () => this.toggleDateSort());
+		
+		this.els.list.addEventListener('dragstart', e => {
+			if (e.target.classList.contains('task-item')) {
+				this.draggedItem = e.target;
+				e.target.classList.add('dragging');
+			}
+		});
+
+		this.els.list.addEventListener('dragover', e => {
+			e.preventDefault();
+			const taskItem = e.target.closest('.task-item');
+			if (taskItem && taskItem !== this.draggedItem) {
+				const rect = taskItem.getBoundingClientRect();
+				this.els.list.insertBefore(this.draggedItem, 
+					(e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5 ? taskItem.nextSibling : taskItem
+				);
+			}
+		});
+
+		this.els.list.addEventListener('drop', e => {
+			e.preventDefault();
+			this.els.list.querySelectorAll('.task-item').forEach((el, i) => {
+				const task = this.tasks.find(t => t.id === +el.dataset.id);
+				if (task) task.order = i;
+			});
+			this.save();
+			this.currentSort = 'custom';
+			this.els.sortBtn.innerHTML = '📅 По дате';
+		});
+
+		this.els.list.addEventListener('dragend', () => {
+			if (this.draggedItem) {
+				this.draggedItem.classList.remove('dragging');
+				this.draggedItem = null;
+			}
+		});		
         
         this.render();
     }
 
-    addTask() {
-        const title = this.els.input.value.trim();
-        if (!title) return alert('Пожалуйста, введите задачу');
+	addTask() {
+		const title = this.els.input.value.trim();
+		if (!title) return alert('Пожалуйста, введите задачу');
 
-        const today = new Date().toISOString().split('T')[0];
-        const date = this.els.date.value || today;
+		const today = new Date().toISOString().split('T')[0];
+		const date = this.els.date.value || today;
 
-        this.tasks.push({ 
-            id: Date.now(), 
-            title, 
-            date, 
-            completed: false 
-        });
-        
-        this.els.input.value = this.els.date.value = '';
-        this.els.input.focus();
-        this.save(); 
-        this.render();
-    }
+		this.tasks.push({ 
+			id: Date.now(), 
+			title, 
+			date, 
+			completed: false, 
+			order: this.tasks.length 
+		});
+		
+		this.els.input.value = this.els.date.value = '';
+		this.els.input.focus();
+		this.save();
+		this.render();
+	}
 
     toggleComplete(id) {
         this.tasks.find(t => t.id === id).completed ^= true;
@@ -129,11 +167,12 @@ class TodoApp {
 		const sorted = [...filtered].sort((a, b) => 
 			this.currentSort === 'date-asc' ? new Date(a.date) - new Date(b.date) :
 			this.currentSort === 'date-desc' ? new Date(b.date) - new Date(a.date) :
-			0
+			(a.order || 0) - (b.order || 0)
 		);
 
 		this.els.list.innerHTML = sorted.map(t => `
-			<li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
+			<li class="task-item ${t.completed ? 'completed' : ''}" 
+				draggable="true" data-id="${t.id}">
 				<input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
 					onchange="app.toggleComplete(${t.id})">
 				<div class="task-content">

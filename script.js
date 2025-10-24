@@ -1,6 +1,7 @@
 class TodoApp {
     constructor() {
-        this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]'); 
+        this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]');
+        this.currentFilter = 'all';
         this.init();
     }
 
@@ -14,6 +15,13 @@ class TodoApp {
                     <input type="text" id="taskInput" placeholder="Введите новую задачу..." class="task-input">
                     <input type="date" id="taskDate" class="task-date">
                     <button class="btn btn-primary" id="addTaskBtn">Добавить задачу</button>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-buttons">
+                        <button class="btn btn-filter active" data-filter="all">Все</button>
+                        <button class="btn btn-filter" data-filter="active">Активные</button>
+                        <button class="btn btn-filter" data-filter="completed">Выполненные</button>
+                    </div>
                 </div>
             </div>
             <div class="tasks-container">
@@ -33,6 +41,11 @@ class TodoApp {
         });
         
         document.getElementById('addTaskBtn').addEventListener('click', () => this.addTask());
+
+        document.querySelectorAll('.btn-filter[data-filter]').forEach(btn => 
+            btn.addEventListener('click', e => this.setFilter(e.target.dataset.filter))
+        );
+        
         this.render();
     }
 
@@ -56,46 +69,58 @@ class TodoApp {
         this.render();
     }
 
-	toggleComplete(id) {
-		this.tasks.find(t => t.id === id).completed ^= true;
-		this.save();
-		this.render();
-	}
-	
-	deleteTask(id) {
-		this.tasks = this.tasks.filter(t => t.id !== id);
-		this.save();
-		this.render();
-	}
-	
-	editTask(id) {
-		const task = this.tasks.find(t => t.id === id);
-		const newTitle = prompt('Редактировать задачу:', task.title);
-		const newDate = prompt('Редактировать дату (YYYY-MM-DD):', task.date);
+    toggleComplete(id) {
+        this.tasks.find(t => t.id === id).completed ^= true;
+        this.save();
+        this.render();
+    }
+    
+    deleteTask(id) {
+        this.tasks = this.tasks.filter(t => t.id !== id);
+        this.save();
+        this.render();
+    }
+    
+    editTask(id) {
+        const task = this.tasks.find(t => t.id === id);
+        const newTitle = prompt('Редактировать задачу:', task.title);
+        const newDate = prompt('Редактировать дату (YYYY-MM-DD):', task.date);
 
-		if (newTitle !== null) task.title = newTitle.trim();
-		if (newDate !== null) task.date = newDate;
-		
-		this.save();
-		this.render();
-	}	
-		
-	render() {
-		this.els.list.innerHTML = this.tasks.map(t => `
-			<li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
-				<input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
-					onchange="app.toggleComplete(${t.id})">
-				<div class="task-content">
-					<div class="task-title">${t.title}</div>
-					<div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
-				</div>
-				<div class="task-actions">
-					<button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
-					<button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
-				</div>
-			</li>
-		`).join('');
-	}
+        if (newTitle !== null) task.title = newTitle.trim();
+        if (newDate !== null) task.date = newDate;
+        
+        this.save();
+        this.render();
+    }
+
+    setFilter(filter) {
+        this.currentFilter = filter;
+        document.querySelectorAll('.btn-filter').forEach(btn => 
+            btn.classList.toggle('active', btn.dataset.filter === filter)
+        );
+        this.render();
+    }
+    
+    render() {
+        let filtered = this.currentFilter === 'active' ? this.tasks.filter(t => !t.completed) :
+                       this.currentFilter === 'completed' ? this.tasks.filter(t => t.completed) :
+                       this.tasks;
+
+        this.els.list.innerHTML = filtered.map(t => `
+            <li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
+                <input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
+                    onchange="app.toggleComplete(${t.id})">
+                <div class="task-content">
+                    <div class="task-title">${t.title}</div>
+                    <div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
+                    <button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
+                </div>
+            </li>
+        `).join('');
+    }
 
     save() {
         localStorage.setItem('todoTasks', JSON.stringify(this.tasks));

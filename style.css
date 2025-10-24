@@ -192,3 +192,29 @@ body {
 .btn-delete:hover {
   background: #c82333;
 }
+
+.filter-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-filter {
+  background: var(--dark-bg);
+  border: 2px solid var(--gray-light);
+  color: var(--dark-text);
+  padding: 10px 20px;
+}
+
+.btn-filter.active {
+  background: var(--orange);
+  color: white;
+  border-color: var(--orange);
+}

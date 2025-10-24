@@ -1,6 +1,6 @@
 class TodoApp {
     constructor() {
-        this.tasks = [];
+        this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]'); 
         this.init();
     }
 
@@ -50,19 +50,21 @@ class TodoApp {
             completed: false 
         });
         
-        this.els.input.value = '';
-        this.els.date.value = '';
+        this.els.input.value = this.els.date.value = '';
         this.els.input.focus();
+        this.save(); 
         this.render();
     }
-	
+
 	toggleComplete(id) {
 		this.tasks.find(t => t.id === id).completed ^= true;
+		this.save();
 		this.render();
 	}
 	
 	deleteTask(id) {
 		this.tasks = this.tasks.filter(t => t.id !== id);
+		this.save();
 		this.render();
 	}
 	
@@ -81,6 +83,10 @@ class TodoApp {
 			</li>
 		`).join('');
 	}
+
+    save() {
+        localStorage.setItem('todoTasks', JSON.stringify(this.tasks));
+    }
 }
 
 const app = new TodoApp();

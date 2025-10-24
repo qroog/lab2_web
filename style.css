@@ -218,3 +218,25 @@ body {
   color: white;
   border-color: var(--orange);
 }
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  background: var(--dark-bg);
+  color: var(--dark-text);
+  transition: var(--transition);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 2px rgba(255, 60, 0, 0.2);
+}

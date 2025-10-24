@@ -8,33 +8,41 @@ class TodoApp {
     init() {
         const container = document.createElement('div');
         container.className = 'container';
-        container.innerHTML = `
-            <div class="header"><h1>To<span>-Do</span> List</h1></div>
-            <div class="controls">
-                <div class="input-group">
-                    <input type="text" id="taskInput" placeholder="Введите новую задачу..." class="task-input">
-                    <input type="date" id="taskDate" class="task-date">
-                    <button class="btn btn-primary" id="addTaskBtn">Добавить задачу</button>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-buttons">
-                        <button class="btn btn-filter active" data-filter="all">Все</button>
-                        <button class="btn btn-filter" data-filter="active">Активные</button>
-                        <button class="btn btn-filter" data-filter="completed">Выполненные</button>
-                    </div>
-                </div>
-            </div>
-            <div class="tasks-container">
-                <ul class="task-list" id="taskList"></ul>
-            </div>
-        `;
+		container.innerHTML = `
+			<div class="header"><h1>To<span>-Do</span> List</h1></div>
+			<div class="controls">
+				<div class="input-group">
+					<input type="text" id="taskInput" placeholder="Введите новую задачу..." class="task-input">
+					<input type="date" id="taskDate" class="task-date">
+					<button class="btn btn-primary" id="addTaskBtn">Добавить задачу</button>
+				</div>
+				<div class="filter-group">
+					<div class="search-box">
+						<input type="text" id="searchInput" placeholder="Поиск задач...">
+					</div>
+					<div class="filter-buttons">
+						<button class="btn btn-filter active" data-filter="all">Все</button>
+						<button class="btn btn-filter" data-filter="active">Активные</button>
+						<button class="btn btn-filter" data-filter="completed">Выполненные</button>
+					</div>
+				</div>
+			</div>
+			<div class="tasks-container">
+				<ul class="task-list" id="taskList"></ul>
+			</div>
+		`;
         document.body.appendChild(container);
 
         this.els = {
             input: document.getElementById('taskInput'),
             date: document.getElementById('taskDate'),
-            list: document.getElementById('taskList')
+            list: document.getElementById('taskList'),
+			search: document.getElementById('searchInput')
         };
+		
+		this.els.search.addEventListener('input', e => this.render(this.tasks.filter(t => 
+			t.title.toLowerCase().includes(e.target.value.toLowerCase())
+		)));		
 
         this.els.input.addEventListener('keypress', e => {
             if (e.key === 'Enter') this.addTask();
@@ -101,26 +109,26 @@ class TodoApp {
         this.render();
     }
     
-    render() {
-        let filtered = this.currentFilter === 'active' ? this.tasks.filter(t => !t.completed) :
-                       this.currentFilter === 'completed' ? this.tasks.filter(t => t.completed) :
-                       this.tasks;
+	render(tasksToRender = this.tasks) {
+		let filtered = this.currentFilter === 'active' ? tasksToRender.filter(t => !t.completed) :
+					   this.currentFilter === 'completed' ? tasksToRender.filter(t => t.completed) :
+					   tasksToRender;
 
-        this.els.list.innerHTML = filtered.map(t => `
-            <li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
-                <input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
-                    onchange="app.toggleComplete(${t.id})">
-                <div class="task-content">
-                    <div class="task-title">${t.title}</div>
-                    <div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
-                </div>
-                <div class="task-actions">
-                    <button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
-                    <button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
-                </div>
-            </li>
-        `).join('');
-    }
+		this.els.list.innerHTML = filtered.map(t => `
+			<li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
+				<input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
+					onchange="app.toggleComplete(${t.id})">
+				<div class="task-content">
+					<div class="task-title">${t.title}</div>
+					<div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
+				</div>
+				<div class="task-actions">
+					<button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
+					<button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
+				</div>
+			</li>
+		`).join('');
+	}
 
     save() {
         localStorage.setItem('todoTasks', JSON.stringify(this.tasks));

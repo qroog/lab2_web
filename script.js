@@ -2,6 +2,7 @@ class TodoApp {
     constructor() {
         this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]');
         this.currentFilter = 'all';
+		this.currentSort = 'date-asc'
         this.init();
     }
 
@@ -24,6 +25,7 @@ class TodoApp {
 						<button class="btn btn-filter active" data-filter="all">Все</button>
 						<button class="btn btn-filter" data-filter="active">Активные</button>
 						<button class="btn btn-filter" data-filter="completed">Выполненные</button>
+						<button class="btn btn-filter" id="sortDateBtn">📅 По дате ↑</button>
 					</div>
 				</div>
 			</div>
@@ -33,12 +35,13 @@ class TodoApp {
 		`;
         document.body.appendChild(container);
 
-        this.els = {
-            input: document.getElementById('taskInput'),
-            date: document.getElementById('taskDate'),
-            list: document.getElementById('taskList'),
-			search: document.getElementById('searchInput')
-        };
+		this.els = {
+			input: document.getElementById('taskInput'),
+			date: document.getElementById('taskDate'),
+			list: document.getElementById('taskList'),
+			search: document.getElementById('searchInput'),
+			sortBtn: document.getElementById('sortDateBtn') 
+		};
 		
 		this.els.search.addEventListener('input', e => this.render(this.tasks.filter(t => 
 			t.title.toLowerCase().includes(e.target.value.toLowerCase())
@@ -53,6 +56,8 @@ class TodoApp {
         document.querySelectorAll('.btn-filter[data-filter]').forEach(btn => 
             btn.addEventListener('click', e => this.setFilter(e.target.dataset.filter))
         );
+		
+		this.els.sortBtn.addEventListener('click', () => this.toggleDateSort());
         
         this.render();
     }
@@ -108,13 +113,26 @@ class TodoApp {
         );
         this.render();
     }
-    
+	
+	toggleDateSort() {
+		this.currentSort = this.currentSort === 'date-asc' ? 'date-desc' : 'date-asc';
+		this.els.sortBtn.innerHTML = `📅 По дате ${this.currentSort === 'date-asc' ? '↑' : '↓'}`;
+		this.els.sortBtn.title = this.currentSort === 'date-asc' ? 'Сначала старые' : 'Сначала новые';
+		this.render();
+	}
+
 	render(tasksToRender = this.tasks) {
 		let filtered = this.currentFilter === 'active' ? tasksToRender.filter(t => !t.completed) :
 					   this.currentFilter === 'completed' ? tasksToRender.filter(t => t.completed) :
 					   tasksToRender;
 
-		this.els.list.innerHTML = filtered.map(t => `
+		const sorted = [...filtered].sort((a, b) => 
+			this.currentSort === 'date-asc' ? new Date(a.date) - new Date(b.date) :
+			this.currentSort === 'date-desc' ? new Date(b.date) - new Date(a.date) :
+			0
+		);
+
+		this.els.list.innerHTML = sorted.map(t => `
 			<li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
 				<input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
 					onchange="app.toggleComplete(${t.id})">

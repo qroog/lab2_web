@@ -68,6 +68,18 @@ class TodoApp {
 		this.render();
 	}
 	
+	editTask(id) {
+		const task = this.tasks.find(t => t.id === id);
+		const newTitle = prompt('Редактировать задачу:', task.title);
+		const newDate = prompt('Редактировать дату (YYYY-MM-DD):', task.date);
+
+		if (newTitle !== null) task.title = newTitle.trim();
+		if (newDate !== null) task.date = newDate;
+		
+		this.save();
+		this.render();
+	}	
+		
 	render() {
 		this.els.list.innerHTML = this.tasks.map(t => `
 			<li class="task-item ${t.completed ? 'completed' : ''}" data-id="${t.id}">
@@ -78,6 +90,7 @@ class TodoApp {
 					<div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
 				</div>
 				<div class="task-actions">
+					<button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
 					<button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
 				</div>
 			</li>

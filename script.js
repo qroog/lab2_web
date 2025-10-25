@@ -31,6 +31,10 @@ class TodoApp {
 				</div>
 			</div>
 			<div class="tasks-container">
+				<div class="stats">
+					<span id="totalTasks">Всего задач: 0</span>
+					<span id="completedTasks">Выполнено: 0</span>
+				</div>
 				<ul class="task-list" id="taskList"></ul>
 			</div>
 		`;
@@ -170,21 +174,30 @@ class TodoApp {
 			(a.order || 0) - (b.order || 0)
 		);
 
-		this.els.list.innerHTML = sorted.map(t => `
-			<li class="task-item ${t.completed ? 'completed' : ''}" 
-				draggable="true" data-id="${t.id}">
-				<input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
-					onchange="app.toggleComplete(${t.id})">
-				<div class="task-content">
-					<div class="task-title">${t.title}</div>
-					<div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
-				</div>
-				<div class="task-actions">
-					<button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
-					<button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
-				</div>
-			</li>
-		`).join('');
+		const today = new Date().toISOString().split('T')[0];
+		
+		this.els.list.innerHTML = sorted.map(t => {
+			const isOverdue = !t.completed && t.date < today;
+			return `
+				<li class="task-item ${t.completed ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}" 
+					draggable="true" data-id="${t.id}">
+					<input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} 
+						onchange="app.toggleComplete(${t.id})">
+					<div class="task-content">
+						<div class="task-title">${t.title}</div>
+						<div class="task-date">${new Date(t.date).toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric'})}</div>
+						${isOverdue ? '<div class="date-warning">⚠️ Просрочено</div>' : ''}
+					</div>
+					<div class="task-actions">
+						<button class="btn-action btn-edit" onclick="app.editTask(${t.id})">✏️</button>
+						<button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
+					</div>
+				</li>
+			`}).join('');
+
+		const completed = this.tasks.filter(t => t.completed).length;
+		document.getElementById('totalTasks').textContent = `Всего задач: ${this.tasks.length}`;
+		document.getElementById('completedTasks').textContent = `Выполнено: ${completed}`;
 	}
 
     save() {

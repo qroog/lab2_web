@@ -266,3 +266,29 @@ body {
 .btn-edit:hover {
   background: var(--orange-dark);
 }
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: var(--dark-bg);
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  border: 1px solid var(--gray-light);
+}
+
+.task-item.overdue {
+  border-left: 4px solid #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.task-item.overdue .task-date {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.date-warning {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+}

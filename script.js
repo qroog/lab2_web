@@ -176,7 +176,7 @@ class TodoApp {
 
 		const today = new Date().toISOString().split('T')[0];
 		
-		this.els.list.innerHTML = sorted.map(t => {
+		this.els.list.innerHTML = sorted.length ? sorted.map(t => {
 			const isOverdue = !t.completed && t.date < today;
 			return `
 				<li class="task-item ${t.completed ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}" 
@@ -193,7 +193,12 @@ class TodoApp {
 						<button class="btn-action btn-delete" onclick="app.deleteTask(${t.id})">🗑️</button>
 					</div>
 				</li>
-			`}).join('');
+			`}).join('') : `
+				<div class="empty-state">
+					<h3>Задач нет</h3>
+					<p>${this.currentFilter === 'all' ? 'Добавьте первую задачу' : 'Попробуйте изменить фильтр'}</p>
+				</div>
+			`;
 
 		const completed = this.tasks.filter(t => t.completed).length;
 		document.getElementById('totalTasks').textContent = `Всего задач: ${this.tasks.length}`;

@@ -1,11 +1,19 @@
 class TodoApp {
-    constructor() {
-        this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]');
-        this.currentFilter = 'all';
-		this.currentSort = 'date-asc'
+	constructor() {
+		this.tasks = JSON.parse(localStorage.getItem('todoTasks') || '[]');
+		this.currentFilter = 'all';
+		this.currentSort = 'date-asc';
 		this.draggedItem = null;
-        this.init();
-    }
+		
+		const link = document.createElement('link');
+		Object.assign(link, {
+			rel: 'icon',
+			href: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">✔️</text></svg>'
+		});
+		document.head.appendChild(link);
+		
+		this.init();
+	}
 
     init() {
         const container = document.createElement('div');

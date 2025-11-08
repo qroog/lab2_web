@@ -251,7 +251,7 @@ body {
   align-items: center;
   gap: 15px;
   transition: var(--transition);
-  cursor: grab; /* ДОБАВЛЕНО */
+  cursor: grab; 
 }
 
 .task-item.dragging {
@@ -345,5 +345,119 @@ body {
   
   .task-actions {
     align-self: flex-end;
+  }
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--dark-card);
+  color: var(--dark-text);
+  border: 2px solid var(--orange);
+  border-radius: var(--border-radius);
+  padding: 15px 25px;
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.3s forwards;
+}
+
+.toast.error {
+  border-color: #dc3545;
+  color: #ffbaba;
+}
+
+.toast.info {
+  border-color: var(--orange);
+}
+
+.toast.success {
+  border-color: var(--success);
+  color: #b6fcb6;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: var(--dark-card);
+  border: 2px solid var(--gray-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  animation: slideDown 0.4s ease;
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  color: var(--orange-light);
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--border-radius);
+  background: var(--dark-bg);
+  color: var(--dark-text);
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+.modal-content input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 2px rgba(255, 60, 0, 0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

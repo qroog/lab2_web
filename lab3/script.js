@@ -72,14 +72,41 @@ class Game2048 {
                 this.moveDir(e.key.replace('Arrow', '').toLowerCase());
             }
         });
+	    document.getElementById('newGameBtn').addEventListener('click', () => this.init());
+        document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+
     }
 
     saveGameState() {
-
+        const state = {grid: this.grid, score: this.score, isGameOver: this.isGameOver};
+        localStorage.setItem('gameState', JSON.stringify(state));
+        this.history.push(JSON.parse(JSON.stringify(state)));
+        if (this.history.length > 10) this.history.shift();
     }
-
+	
     loadGameState() {
-
+        const saved = localStorage.getItem('gameState');
+        if (saved) {
+            const state = JSON.parse(saved);
+            this.grid = state.grid;
+            this.score = state.score;
+            this.isGameOver = state.isGameOver;
+            this.render();
+            this.updateScore();
+        }
+    }
+	
+    undo() {
+        if (this.history.length > 1) {
+            this.history.pop();
+            const prev = this.history[this.history.length - 1];
+            this.grid = JSON.parse(JSON.stringify(prev.grid));
+            this.score = prev.score;
+            this.isGameOver = prev.isGameOver;
+            this.render();
+            this.updateScore();
+            localStorage.setItem('gameState', JSON.stringify(prev));
+        }
     }
 	
     moveDir(dir) {

@@ -76,6 +76,78 @@ class Game2048 {
     loadGameState() {
 
     }
+	
+    moveDir(dir) {
+        if (this.isGameOver) return;
+        const oldGrid = JSON.stringify(this.grid);
+        this.mergedTiles = [];
+        const transpose = g => g.map((_, i) => g.map(row => row[i]));
+        const reverse = g => g.map(row => [...row].reverse());
+        let grid = this.grid;
+
+        if (dir === 'up') grid = transpose(grid);
+        else if (dir === 'down') grid = reverse(transpose(grid));
+        else if (dir === 'right') grid = reverse(grid);
+
+        grid = grid.map((row, i) => {
+            const line = this.processLine(row);
+            return line.map((val, j) => {
+                if (val && row[j] !== val) {
+                    let actualRow = i, actualCol = j;
+                    if (dir === 'up') [actualRow, actualCol] = [j, i];
+                    else if (dir === 'down') [actualRow, actualCol] = [3 - j, i];
+                    else if (dir === 'right') actualCol = 3 - j;
+                    if (row.filter(v => v).length > line.filter(v => v).length) 
+                        this.mergedTiles.push({row: actualRow, col: actualCol});
+                }
+                return val;
+            });
+        });
+
+        if (dir === 'right') grid = reverse(grid);
+        if (dir === 'down') grid = transpose(reverse(grid));
+        if (dir === 'up') grid = transpose(grid);
+
+        this.grid = grid;
+
+        if (oldGrid !== JSON.stringify(this.grid)) {
+            this.addRandomTile();
+            this.render();
+            this.updateScore();
+            this.saveGameState();
+            this.checkGameOver();
+        }
+    }
+
+    processLine(row) {
+        let line = row.filter(v => v);
+        for (let i = 0; i < line.length - 1; i++) {
+            if (line[i] === line[i + 1]) {
+                line[i] *= 2;
+                this.score += line[i];
+                line.splice(i + 1, 1);
+            }
+        }
+        while (line.length < 4) line.push(0);
+        return line;
+    }
+
+    checkGameOver() {
+        for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
+            if (!this.grid[i][j]) return;
+            if (j < 3 && this.grid[i][j] === this.grid[i][j + 1]) return;
+            if (i < 3 && this.grid[i][j] === this.grid[i + 1][j]) return;
+        }
+        this.isGameOver = true;
+        this.showGameOver();
+    }
+
+    showGameOver() {
+        document.getElementById('finalScore').textContent = this.score;
+        document.getElementById('gameOverModal').style.display = 'flex';
+    }
+	
+	
 }
 
 const game = new Game2048();

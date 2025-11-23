@@ -66,7 +66,12 @@ class Game2048 {
     }
 
     setupEventListeners() {
-
+        document.addEventListener('keydown', e => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                this.moveDir(e.key.replace('Arrow', '').toLowerCase());
+            }
+        });
     }
 
     saveGameState() {

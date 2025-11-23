@@ -57,3 +57,30 @@ h1 {
     font-size: 1.5em;
     font-weight: bold;
 }
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    flex: 1;
+    padding: 10px 20px;
+    background: #8f7a66;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #9f8a76;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}

@@ -33,3 +33,27 @@ h1 {
     color: #776e65;
     margin-bottom: 10px;
 }
+
+.scores {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.score-container {
+    background: #bbada0;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+}
+
+.score-label {
+    font-size: 0.8em;
+    text-transform: uppercase;
+}
+
+.score-value {
+    font-size: 1.5em;
+    font-weight: bold;
+}

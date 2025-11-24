@@ -213,3 +213,30 @@ h1 {
     font-weight: bold;
     margin: 10px 0;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #bbada0;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background: #f5f5f5;
+}
+
+.top-score {
+    background: #ffd700;
+    font-weight: bold;
+}

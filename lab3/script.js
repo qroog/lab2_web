@@ -98,6 +98,11 @@ class Game2048 {
             attributes: true, attributeFilter: ['style']
         });
 
+        document.getElementById('leaderboardBtn').addEventListener('click', () => this.showLeaderboard());
+        document.getElementById('closeLeaderboardBtn').addEventListener('click', () => 
+            document.getElementById('leaderboardModal').style.display = 'none'
+        );
+
 
     }
 
@@ -212,6 +217,15 @@ class Game2048 {
     showGameOver() {
         document.getElementById('finalScore').textContent = this.score;
         document.getElementById('gameOverModal').style.display = 'flex';
+    }
+	
+    showLeaderboard() {
+        const scores = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        const tbody = document.getElementById('leaderboardBody');
+        tbody.innerHTML = scores.length ? scores.map((s, i) => 
+            `<tr class="${i < 3 ? 'top-score' : ''}"><td>${i + 1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.date}</td></tr>`
+        ).join('') : '<tr><td colspan="4">Нет результатов</td></tr>';
+        document.getElementById('leaderboardModal').style.display = 'flex';
     }
 	
 	

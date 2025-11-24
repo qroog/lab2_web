@@ -103,6 +103,25 @@ class Game2048 {
             document.getElementById('leaderboardModal').style.display = 'none'
         );
 
+        const board = document.getElementById('gameBoard');
+        board.addEventListener('touchstart', e => {
+            this.touchStartX = e.touches.clientX;
+            this.touchStartY = e.touches.clientY;
+        });
+
+        board.addEventListener('touchend', e => {
+            if (!this.touchStartX || !this.touchStartY) return;
+            const dx = e.changedTouches.clientX - this.touchStartX;
+            const dy = e.changedTouches.clientY - this.touchStartY;
+            if (Math.abs(dx) > Math.abs(dy)) this.moveDir(dx > 0 ? 'right' : 'left');
+            else this.moveDir(dy > 0 ? 'down' : 'up');
+            this.touchStartX = this.touchStartY = 0;
+        });
+
+        document.querySelectorAll('.direction-btn').forEach(btn => 
+            btn.addEventListener('click', () => this.moveDir(btn.dataset.direction))
+        );
+
 
     }
 

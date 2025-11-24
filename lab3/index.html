@@ -31,6 +31,17 @@
 
 		<div id="gameBoard" class="game-board"></div>
 
+	<div id="gameOverModal" class="modal">
+		<div class="modal-content">
+			<h2>Игра окончена!</h2>
+			<p>Ваш счет: <span id="finalScore">0</span></p>
+			<input type="text" id="playerName" placeholder="Введите ваше имя" maxlength="20">
+			<button class="btn" id="saveScoreBtn">Сохранить результат</button>
+			<div id="scoreSaved" class="score-saved">Ваш рекорд сохранен!</div>
+			<button class="btn" id="restartBtn">Начать заново</button>
+		</div>
+	</div>
+
 		
     </div>
     <script src="script.js"></script>

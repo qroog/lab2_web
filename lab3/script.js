@@ -74,6 +74,30 @@ class Game2048 {
         });
 	    document.getElementById('newGameBtn').addEventListener('click', () => this.init());
         document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+		document.getElementById('saveScoreBtn').addEventListener('click', () => this.saveScore());
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            document.getElementById('gameOverModal').style.display = 'none';
+            document.getElementById('scoreSaved').style.display = 'none';
+            document.getElementById('saveScoreBtn').disabled = false;
+            document.getElementById('playerName').value = '';
+            this.init();
+        });
+
+        document.getElementById('playerName').addEventListener('keypress', e => {
+            if (e.key === 'Enter') this.saveScore();
+        });
+
+        window.addEventListener('click', e => {
+            if (e.target.classList.contains('modal')) e.target.style.display = 'none';
+        });
+
+        new MutationObserver(mutations => mutations.forEach(m => {
+            if (m.target.id === 'gameOverModal' && m.target.style.display === 'flex') 
+                document.getElementById('playerName').focus();
+        })).observe(document.getElementById('gameOverModal'), {
+            attributes: true, attributeFilter: ['style']
+        });
+
 
     }
 
@@ -108,6 +132,17 @@ class Game2048 {
             localStorage.setItem('gameState', JSON.stringify(prev));
         }
     }
+	
+    saveScore() {
+        const name = document.getElementById('playerName').value.trim() || 'Аноним';
+        const scores = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        scores.push({name, score: this.score, date: new Date().toLocaleDateString('ru-RU')});
+        scores.sort((a, b) => b.score - a.score);
+        localStorage.setItem('leaderboard', JSON.stringify(scores.slice(0, 10)));
+        document.getElementById('scoreSaved').style.display = 'block';
+        document.getElementById('saveScoreBtn').disabled = true;
+    }
+
 	
     moveDir(dir) {
         if (this.isGameOver) return;

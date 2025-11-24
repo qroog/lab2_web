@@ -153,3 +153,63 @@ h1 {
 .merged-tile {
     animation: tileMerge 0.3s ease-in-out;
 }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    color: #776e65;
+    margin-bottom: 20px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #bbada0;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.modal-content .btn {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.score-saved {
+    display: none;
+    color: #60a060;
+    font-weight: bold;
+    margin: 10px 0;
+}

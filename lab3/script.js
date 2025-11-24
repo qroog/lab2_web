@@ -104,15 +104,15 @@ class Game2048 {
         );
 
         const board = document.getElementById('gameBoard');
-        board.addEventListener('touchstart', e => {
-            this.touchStartX = e.touches.clientX;
-            this.touchStartY = e.touches.clientY;
-        });
+		board.addEventListener('touchstart', e => {
+			this.touchStartX = e.touches[0].clientX;   
+			this.touchStartY = e.touches[0].clientY;   
+		});
 
         board.addEventListener('touchend', e => {
             if (!this.touchStartX || !this.touchStartY) return;
-            const dx = e.changedTouches.clientX - this.touchStartX;
-            const dy = e.changedTouches.clientY - this.touchStartY;
+			const dx = e.changedTouches[0].clientX - this.touchStartX;
+			const dy = e.changedTouches[0].clientY - this.touchStartY;
             if (Math.abs(dx) > Math.abs(dy)) this.moveDir(dx > 0 ? 'right' : 'left');
             else this.moveDir(dy > 0 ? 'down' : 'up');
             this.touchStartX = this.touchStartY = 0;

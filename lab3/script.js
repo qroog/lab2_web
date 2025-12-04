@@ -20,28 +20,41 @@ class Game2048 {
         this.setMobileControlsVisible(true);
     }
 
-    render() {
-        const board = document.getElementById('gameBoard');
-        const tiles = board.children;
-        if (!tiles.length) {
-            while (board.firstChild) board.removeChild(board.firstChild);
-            this.grid.forEach((row, i) => row.forEach((val, j) => {
-                const tile = document.createElement('div');
-                tile.className = 'tile';
-                tile.dataset.row = i;
-                tile.dataset.col = j;
-                board.appendChild(tile);
-            }));
-        }
-        Array.from(board.children).forEach(tile => {
-            const row = parseInt(tile.dataset.row), col = parseInt(tile.dataset.col), value = this.grid[row][col];
-            tile.textContent = value || '';
-            tile.className = 'tile' + (value ? ` tile-${value}` : '');
-            if (this.newTiles.some(t => t.row === row && t.col === col)) tile.classList.add('new-tile');
-            if (this.mergedTiles.some(t => t.row === row && t.col === col)) tile.classList.add('merged-tile');
-        });
-        this.newTiles = this.mergedTiles = [];
-    }
+	render() {
+		const board = document.getElementById('gameBoard');
+		const tiles = board.children;
+		if (!tiles.length) {
+			while (board.firstChild) board.removeChild(board.firstChild);
+			this.grid.forEach((row, i) => row.forEach((val, j) => {
+				const tile = document.createElement('div');
+				tile.className = 'tile';
+				tile.dataset.row = i;
+				tile.dataset.col = j;
+				board.appendChild(tile);
+			}));
+		}
+		
+		Array.from(board.children).forEach(tile => {
+			const row = parseInt(tile.dataset.row);
+			const col = parseInt(tile.dataset.col);
+			const value = this.grid[row][col];
+			
+			tile.textContent = value || '';
+			tile.className = 'tile' + (value ? ` tile-${value}` : '');
+			
+			if (this.newTiles.some(t => t.row === row && t.col === col)) {
+				tile.classList.add('new-tile');
+			}
+			
+			if (this.mergedTiles.some(t => t.row === row && t.col === col)) {
+				tile.classList.add('merged-tile');
+			}
+		});
+		
+		this.newTiles = this.mergedTiles = [];
+	}
+
+
 
     addRandomTile() {
         const emptyCells = [];
@@ -238,16 +251,63 @@ class Game2048 {
         document.getElementById('gameOverModal').style.display = 'flex';
     }
 	
-    showLeaderboard() {
-        const scores = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        const tbody = document.getElementById('leaderboardBody');
-        tbody.innerHTML = scores.length ? scores.map((s, i) => 
-            `<tr class="${i < 3 ? 'top-score' : ''}"><td>${i + 1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.date}</td></tr>`
-        ).join('') : '<tr><td colspan="4">Нет результатов</td></tr>';
-        document.getElementById('leaderboardModal').style.display = 'flex';
-    }
+	showLeaderboard() {
+		const scores = JSON.parse(localStorage.getItem('leaderboard')) || [];
+		const tbody = document.getElementById('leaderboardBody');
+		
+		while (tbody.firstChild) {
+			tbody.removeChild(tbody.firstChild);
+		}
+		
+		if (scores.length) {
+			const fragment = document.createDocumentFragment();
+			
+			scores.forEach((s, i) => {
+				const tr = document.createElement('tr');
+				
+				if (i < 3) {
+					tr.classList.add('top-score');
+				}
+				
+				const tdRank = document.createElement('td');
+				tdRank.textContent = i + 1;
+				
+				const tdName = document.createElement('td');
+				tdName.textContent = s.name;
+				
+				const tdScore = document.createElement('td');
+				tdScore.textContent = s.score;
+				
+				const tdDate = document.createElement('td');
+				tdDate.textContent = s.date;
+				
+				tr.appendChild(tdRank);
+				tr.appendChild(tdName);
+				tr.appendChild(tdScore);
+				tr.appendChild(tdDate);
+				
+				fragment.appendChild(tr);
+			});
+			
+			tbody.appendChild(fragment);
+		} else {
+			const tr = document.createElement('tr');
+			const td = document.createElement('td');
+			
+			td.setAttribute('colspan', '4');
+			td.textContent = 'Нет результатов';
+			
+			tr.appendChild(td);
+			tbody.appendChild(tr);
+		}
+		
+		document.getElementById('leaderboardModal').style.display = 'flex';
+	}
+
 	
 	
 }
 
 const game = new Game2048();
+
+// 

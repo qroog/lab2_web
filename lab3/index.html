@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>2048 Game</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+		<header>
+			<h1>2048</h1>
+			<div class="scores">
+				<div class="score-container">
+					<div class="score-label">Счет</div>
+					<div class="score-value" id="score">0</div>
+				</div>
+				<div class="score-container">
+					<div class="score-label">Лучший</div>
+					<div class="score-value" id="bestScore">0</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="controls">
+			<button class="btn" id="newGameBtn">Новая игра</button>
+			<button class="btn" id="undoBtn">Отменить ход</button>
+			<button class="btn" id="leaderboardBtn">Таблица лидеров</button>
+		</div>
+
+		<div id="gameBoard" class="game-board"></div>
+
+		<div id="mobileControls" class="mobile-controls">
+			<button class="direction-btn up-btn" data-direction="up">↑</button>
+			<div class="horizontal-controls">
+				<button class="direction-btn left-btn" data-direction="left">←</button>
+				<button class="direction-btn down-btn" data-direction="down">↓</button>
+				<button class="direction-btn right-btn" data-direction="right">→</button>
+			</div>
+		</div>
+
+
+	<div id="gameOverModal" class="modal">
+		<div class="modal-content">
+			<h2>Игра окончена!</h2>
+			<p>Ваш счет: <span id="finalScore">0</span></p>
+			<input type="text" id="playerName" placeholder="Введите ваше имя" maxlength="20">
+			<button class="btn" id="saveScoreBtn">Сохранить результат</button>
+			<div id="scoreSaved" class="score-saved">Ваш рекорд сохранен!</div>
+			<button class="btn" id="restartBtn">Начать заново</button>
+		</div>
+	</div>
+
+	<div id="leaderboardModal" class="modal">
+		<div class="modal-content">
+			<h2>Таблица лидеров</h2>
+			<table id="leaderboardTable">
+				<thead>
+					<tr>
+						<th>Место</th>
+						<th>Имя</th>
+						<th>Счет</th>
+						<th>Дата</th>
+					</tr>
+				</thead>
+				<tbody id="leaderboardBody"></tbody>
+			</table>
+			<button class="btn" id="closeLeaderboardBtn">Закрыть</button>
+		</div>
+	</div>
+			
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

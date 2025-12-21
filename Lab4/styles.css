@@ -358,3 +358,51 @@ body {
     color: var(--color-secondary);
     margin-bottom: 12px;
 }
+
+.weather {
+    animation: fadeIn 0.3s ease;
+}
+
+.weather__location {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.weather__current {
+    background: rgba(78, 205, 196, 0.1);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.weather__temp {
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.weather__details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.weather__detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-light);
+}
+
+.weather__icon {
+    font-size: 64px;
+    color: var(--color-accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+}

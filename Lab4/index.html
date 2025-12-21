@@ -15,14 +15,48 @@
                 <i class="wi wi-refresh"></i>
             </button>
         </header>
-		<div class="add-city">
-		<input type="text" class="add-city__input" id="cityInput" placeholder="Добавить город...">
-		<div class="add-city__dropdown" id="cityDropdown"></div>
-		<div class="add-city__error" id="cityError"></div>
-	</div>
-		<div class="tabs" id="cityTabs"></div>
-		<div class="weather-content" id="weatherContent"></div>
+
+        <div class="add-city">
+            <input type="text" class="add-city__input" id="cityInput" placeholder="Добавить город...">
+            <div class="add-city__dropdown" id="cityDropdown"></div>
+            <div class="add-city__error" id="cityError"></div>
+        </div>
+
+        <div class="tabs" id="cityTabs"></div>
+        <div class="weather-content" id="weatherContent"></div>
     </div>
+
+    <div class="modal" id="geoModal">
+        <div class="modal__content">
+            <h2 class="modal__title">Доступ к геолокации</h2>
+            <p class="modal__text">
+                Разрешите доступ к геолокации для автоматического определения вашего местоположения
+            </p>
+            <div class="modal__buttons">
+                <button class="modal__btn modal__btn--primary" id="allowGeoBtn">Разрешить</button>
+                <button class="modal__btn modal__btn--secondary" id="denyGeoBtn">Отклонить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="manualCityModal">
+        <div class="modal__content">
+            <h2 class="modal__title">Выберите город</h2>
+            <p class="modal__text">Выберите город для получения прогноза погоды</p>
+            <input
+                type="text"
+                class="modal__input"
+                id="manualCityInput"
+                placeholder="Введите название города..."
+            >
+            <div class="modal__dropdown" id="manualCityDropdown"></div>
+            <div class="add-city__error" id="manualCityError"></div>
+            <div class="modal__buttons">
+                <button class="modal__btn modal__btn--primary" id="confirmManualCity">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

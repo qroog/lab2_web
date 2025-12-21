@@ -149,3 +149,38 @@ body {
     min-height: 400px;
     box-shadow: var(--shadow);
 }
+
+.tab {
+    padding: 12px 20px;
+    background: var(--color-card);
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--color-text-light);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tab:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+}
+
+.tab.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-bg);
+    font-weight: 600;
+}
+
+.tab__close {
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.tab__close:hover {
+    opacity: 1;
+}

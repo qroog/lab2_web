@@ -406,3 +406,53 @@ body {
     line-height: 1;
     margin-bottom: 8px;
 }
+
+.weather__forecast {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.forecast-card {
+    background: var(--color-card-light);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.forecast-card:hover {
+    transform: translateY(-4px);
+}
+
+.forecast-card__date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    margin-bottom: 12px;
+}
+
+.forecast-card__icon {
+    font-size: 3rem;
+    display: block;
+    margin: 12px 0;
+    color: var(--color-primary);
+}
+
+.forecast-card__temp {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 12px 0;
+}
+
+.forecast-card__info {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-top: 8px;
+}
+
+.weather__detail i, .forecast-card__info i {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-right: 4px;
+}

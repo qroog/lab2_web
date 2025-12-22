@@ -223,3 +223,33 @@ const renderDropdown = (cities, dropdown, onSelect) => {
     });
     dropdown.classList.add('active');
 };
+
+const requestGeo = async () => {
+    el.geoModal.classList.remove('active');
+    try {
+        showLoader();
+        const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, enableHighAccuracy: true });
+        });
+        state.locations.push({ isGeo: true, lat: pos.coords.latitude, lon: pos.coords.longitude, name: 'Текущее местоположение' });
+        state.activeLocationIndex = 0;
+        await loadWeather();
+        renderTabs();
+        storage.save();
+    } catch (error) {
+        showErrorMsg('Не удалось получить геолокацию');
+        setTimeout(() => el.manualCityModal.classList.add('active'), 1500);
+    }
+};
+
+const loadWeather = async () => {
+    if (!state.locations.length) return;
+    const loc = state.locations[state.activeLocationIndex];
+    try {
+        showLoader();
+        const data = await getWeather(loc.lat, loc.lon);
+        renderWeather(loc, data);
+    } catch (error) {
+        showErrorMsg('Не удалось загрузить данные о погоде');
+    }
+};

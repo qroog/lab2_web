@@ -189,3 +189,37 @@ const renderWeather = (loc, data) => {
     weather.appendChild(forecast);
     el.weatherContent.appendChild(weather);
 };
+
+const renderTabs = () => {
+    el.cityTabs.textContent = '';
+    state.locations.forEach((loc, idx) => {
+        const tab = create('div', 'tab');
+        if (idx === state.activeLocationIndex) tab.classList.add('active');
+        tab.appendChild(create('span', '', loc.isGeo ? 'Текущее' : loc.name));
+
+        const close = create('span', 'tab__close', '×');
+        close.onclick = (e) => {
+            e.stopPropagation();
+            removeLocation(idx);
+        };
+        tab.appendChild(close);
+        tab.onclick = () => switchLocation(idx);
+        el.cityTabs.appendChild(tab);
+    });
+};
+
+const renderDropdown = (cities, dropdown, onSelect) => {
+    dropdown.textContent = '';
+    if (!cities.length) {
+        dropdown.classList.remove('active');
+        return;
+    }
+
+    cities.forEach(city => {
+        const text = city.admin ? \`\${city.name}, \${city.admin}, \${city.country}\` : \`\${city.name}, \${city.country}\`;
+        const item = create('div', 'add-city__dropdown-item', text);
+        item.onclick = () => onSelect(city);
+        dropdown.appendChild(item);
+    });
+    dropdown.classList.add('active');
+};

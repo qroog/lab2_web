@@ -226,3 +226,45 @@ const loadWeather = async () => {
     showErrorMsg('Не удалось загрузить данные о погоде');
   }
 };
+
+const switchLocation = (idx) => {
+  state.activeLocationIndex = idx;
+  renderTabs();
+  loadWeather();
+  storage.save();
+};
+
+const removeLocation = (idx) => {
+  state.locations.splice(idx, 1);
+  if (!state.locations.length) {
+    state.activeLocationIndex = 0;
+    el.weatherContent.textContent = '';
+    el.manualCityModal.classList.add('active');
+  } else {
+    if (state.activeLocationIndex >= state.locations.length) {
+      state.activeLocationIndex = state.locations.length - 1;
+    }
+    loadWeather();
+  }
+  renderTabs();
+  storage.save();
+};
+
+const addCity = async (city) => {
+  if (state.locations.some(loc => !loc.isGeo && loc.lat === city.lat && loc.lon === city.lon)) {
+    showError(el.cityError, 'Этот город уже добавлен');
+    return;
+  }
+  if (state.locations.filter(loc => !loc.isGeo).length >= 10) {
+    showError(el.cityError, 'Можно добавить максимум 10 дополнительных городов');
+    return;
+  }
+
+  state.locations.push({ isGeo: false, lat: city.lat, lon: city.lon, name: city.name });
+  state.activeLocationIndex = state.locations.length - 1;
+  await loadWeather();
+  renderTabs();
+  storage.save();
+  el.cityInput.value = '';
+  el.cityDropdown.classList.remove('active');
+};

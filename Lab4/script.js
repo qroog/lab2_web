@@ -268,3 +268,18 @@ const addCity = async (city) => {
   el.cityInput.value = '';
   el.cityDropdown.classList.remove('active');
 };
+
+let searchTimeout;
+
+const handleCityInput = (input, dropdown, onSelect) => {
+    clearTimeout(searchTimeout);
+    if (input.value.trim().length < 2) {
+        dropdown.classList.remove('active');
+        return;
+    }
+
+    searchTimeout = setTimeout(async () => {
+        const cities = await searchCities(input.value);
+        renderDropdown(cities, dropdown, onSelect);
+    }, 300);
+};

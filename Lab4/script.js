@@ -110,3 +110,30 @@ const storage = {
         if (idx) state.activeLocationIndex = parseInt(idx);
     }
 };
+
+const getWeather = async (lat, lon) => {
+    const url = \`https://api.open-meteo.com/v1/forecast?latitude=\${lat}&longitude=\${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,precipitation_sum&timezone=auto\`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Не удалось получить данные о погоде');
+    return await res.json();
+};
+
+const searchCities = async (query) => {
+    if (query.length < 2) return [];
+    try {
+        const url = \`https://geocoding-api.open-meteo.com/v1/search?name=\${encodeURIComponent(query)}&count=10&language=ru&format=json\`;
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.results?.map(city => ({
+            name: city.name,
+            lat: city.latitude,
+            lon: city.longitude,
+            country: city.country_code || city.country || '',
+            admin: city.admin1 || ''
+        })) || [];
+    } catch (error) {
+        console.error('Ошибка поиска городов:', error);
+        return [];
+    }
+};

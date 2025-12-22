@@ -153,3 +153,39 @@ const showErrorMsg = (msg) => {
     error.appendChild(create('p', 'error-message__text', msg));
     el.weatherContent.appendChild(error);
 };
+
+const renderWeather = (loc, data) => {
+    el.weatherContent.textContent = '';
+    const weather = create('div', 'weather');
+    weather.appendChild(create('h2', 'weather__location', loc.isGeo ? 'Текущее местоположение' : loc.name));
+
+    const current = create('div', 'weather__current');
+    current.appendChild(create('div', 'weather__temp', \`\${Math.round(data.current.temperature_2m)}°C\`));
+
+    const details = create('div', 'weather__details');
+    details.appendChild(create('i', \`weather__icon \${icons[data.current.weather_code] || 'wi wi-day-sunny'}\`));
+    details.appendChild(create('div', 'weather__detail', descriptions[data.current.weather_code] || 'Неизвестно'));
+    details.appendChild(createIconBlock('weather__detail', 'wi wi-humidity', \` Влажность: \${data.current.relative_humidity_2m}%\`));
+    details.appendChild(createIconBlock('weather__detail', 'wi wi-strong-wind', \` Ветер: \${Math.round(data.current.wind_speed_10m)} км/ч\`));
+
+    current.appendChild(details);
+    weather.appendChild(current);
+
+    const forecast = create('div', 'weather__forecast');
+    for (let i = 0; i < 3; i++) {
+        const card = create('div', 'forecast-card');
+        card.appendChild(create('div', 'forecast-card__date', formatDate(data.daily.time[i])));
+        card.appendChild(create('i', \`forecast-card__icon \${icons[data.daily.weather_code[i]] || 'wi wi-day-sunny'}\`));
+        card.appendChild(create('div', 'forecast-card__temp',
+            \`\${Math.round(data.daily.temperature_2m_max[i])}° / \${Math.round(data.daily.temperature_2m_min[i])}°\`));
+
+        const info = create('div', 'forecast-card__info');
+        info.appendChild(createIconBlock('', 'wi wi-strong-wind', \` \${Math.round(data.daily.wind_speed_10m_max[i])} км/ч\`));
+        info.appendChild(createIconBlock('', 'wi wi-raindrops', \` \${data.daily.precipitation_sum[i]} мм\`));
+        card.appendChild(info);
+        forecast.appendChild(card);
+    }
+
+    weather.appendChild(forecast);
+    el.weatherContent.appendChild(weather);
+};

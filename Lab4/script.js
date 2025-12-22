@@ -137,3 +137,19 @@ const searchCities = async (query) => {
         return [];
     }
 };
+
+const showLoader = () => {
+    el.weatherContent.textContent = '';
+    const loader = create('div', 'loader');
+    loader.appendChild(create('div', 'loader__spinner'));
+    loader.appendChild(create('p', '', 'Загрузка...'));
+    el.weatherContent.appendChild(loader);
+};
+
+const showErrorMsg = (msg) => {
+    el.weatherContent.textContent = '';
+    const error = create('div', 'error-message');
+    error.appendChild(create('h2', 'error-message__title', 'Ошибка'));
+    error.appendChild(create('p', 'error-message__text', msg));
+    el.weatherContent.appendChild(error);
+};

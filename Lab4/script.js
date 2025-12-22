@@ -283,3 +283,64 @@ const handleCityInput = (input, dropdown, onSelect) => {
         renderDropdown(cities, dropdown, onSelect);
     }, 300);
 };
+
+const init = () => {
+    storage.load();
+    if (state.locations.length > 0) {
+        renderTabs();
+        loadWeather();
+    } else {
+        el.geoModal.classList.add('active');
+    }
+
+    el.allowGeoBtn.onclick = requestGeo;
+    el.denyGeoBtn.onclick = () => {
+        el.geoModal.classList.remove('active');
+        el.manualCityModal.classList.add('active');
+    };
+
+    el.cityInput.oninput = () => handleCityInput(el.cityInput, el.cityDropdown, addCity);
+    el.cityInput.onblur = () => setTimeout(() => el.cityDropdown.classList.remove('active'), 200);
+
+    el.manualCityInput.oninput = () => {
+        handleCityInput(el.manualCityInput, el.manualCityDropdown, (city) => {
+            el.manualCityInput.value = city.name;
+            el.manualCityInput.dataset.lat = city.lat;
+            el.manualCityInput.dataset.lon = city.lon;
+            el.manualCityDropdown.classList.remove('active');
+        });
+    };
+    el.manualCityInput.onblur = () => setTimeout(() => el.manualCityDropdown.classList.remove('active'), 200);
+
+    el.confirmManualCity.onclick = async () => {
+        const { value: cityName, dataset: { lat, lon } } = el.manualCityInput;
+        if (!cityName.trim() || !lat || !lon) {
+            showError(el.manualCityError, 'Пожалуйста, выберите город из списка');
+            return;
+        }
+
+        el.manualCityModal.classList.remove('active');
+        state.locations.push({ isGeo: false, lat: parseFloat(lat), lon: parseFloat(lon), name: cityName });
+        state.activeLocationIndex = 0;
+        await loadWeather();
+        renderTabs();
+        storage.save();
+        el.manualCityInput.value = '';
+        delete el.manualCityInput.dataset.lat;
+        delete el.manualCityInput.dataset.lon;
+    };
+
+    el.refreshBtn.onclick = async () => {
+        el.refreshBtn.classList.add('rotating');
+        await loadWeather();
+        setTimeout(() => el.refreshBtn.classList.remove('rotating'), 600);
+    };
+
+    el.manualCityModal.onclick = (e) => {
+        if (e.target === el.manualCityModal && state.locations.length > 0) {
+            el.manualCityModal.classList.remove('active');
+        }
+    };
+};
+
+document.addEventListener('DOMContentLoaded', init);

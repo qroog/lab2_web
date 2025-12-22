@@ -39,3 +39,61 @@ const descriptions = {
     81: 'Сильный ливень', 82: 'Очень сильный ливень', 85: 'Снегопад',
     86: 'Сильный снегопад', 95: 'Гроза', 96: 'Гроза с градом', 99: 'Сильная гроза с градом'
 };
+
+const create = (tag, className, text) => {
+    const elem = document.createElement(tag);
+    if (className) elem.className = className;
+    if (text) elem.textContent = text;
+    return elem;
+};
+
+const createIconBlock = (containerClass, iconClass, text) => {
+    const block = create('div', containerClass);
+    block.appendChild(create('i', iconClass));
+    block.appendChild(document.createTextNode(text));
+    return block;
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date().toDateString();
+    const tomorrow = new Date(Date.now() + 86400000).toDateString();
+    if (date.toDateString() === today) return 'Сегодня';
+    if (date.toDateString() === tomorrow) return 'Завтра';
+    return date.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' });
+};
+
+const showError = (elem, msg) => {
+    elem.textContent = msg;
+    elem.classList.add('active');
+    setTimeout(() => elem.classList.remove('active'), 3000);
+};
+
+const create = (tag, className, text) => {
+    const elem = document.createElement(tag);
+    if (className) elem.className = className;
+    if (text) elem.textContent = text;
+    return elem;
+};
+
+const createIconBlock = (containerClass, iconClass, text) => {
+    const block = create('div', containerClass);
+    block.appendChild(create('i', iconClass));
+    block.appendChild(document.createTextNode(text));
+    return block;
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date().toDateString();
+    const tomorrow = new Date(Date.now() + 86400000).toDateString();
+    if (date.toDateString() === today) return 'Сегодня';
+    if (date.toDateString() === tomorrow) return 'Завтра';
+    return date.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' });
+};
+
+const showError = (elem, msg) => {
+    elem.textContent = msg;
+    elem.classList.add('active');
+    setTimeout(() => elem.classList.remove('active'), 3000);
+};

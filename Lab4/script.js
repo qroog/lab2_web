@@ -97,3 +97,16 @@ const showError = (elem, msg) => {
     elem.classList.add('active');
     setTimeout(() => elem.classList.remove('active'), 3000);
 };
+
+const storage = {
+    save: () => {
+        localStorage.setItem('weatherAppLocations', JSON.stringify(state.locations));
+        localStorage.setItem('weatherAppActiveIndex', state.activeLocationIndex);
+    },
+    load: () => {
+        const loc = localStorage.getItem('weatherAppLocations');
+        const idx = localStorage.getItem('weatherAppActiveIndex');
+        if (loc) state.locations = JSON.parse(loc);
+        if (idx) state.activeLocationIndex = parseInt(idx);
+    }
+};

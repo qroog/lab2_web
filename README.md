@@ -4,6 +4,8 @@
 
 Ссылка: weatherapplab4.netlify.app
 
+Видео: https://drive.google.com/file/d/1EvfCToc9zpNcnbnx46eXLsh9dbRSS7sz/view?usp=sharing
+
 ### Основные возможности
 
 - Определение геолокации 
